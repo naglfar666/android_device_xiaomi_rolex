@@ -41,11 +41,11 @@ TARGET_USES_64_BIT_BINDER := true
 # Kernel
 BOARD_KERNEL_BASE := 0x80000000
 BOARD_KERNEL_CMDLINE := androidboot.hardware=qcom msm_rtb.filter=0x237 ehci-hcd.park=3 lpm_levels.sleep_disabled=1 androidboot.bootdevice=7824900.sdhci earlycon=msm_hsl_uart,0x78B0000 console=tty0
-BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
+#BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
 BOARD_KERNEL_IMAGE_NAME := Image.gz-dtb
 BOARD_KERNEL_PAGESIZE :=  2048
 BOARD_MKBOOTIMG_ARGS := --ramdisk_offset 0x01000000 --tags_offset 0x00000100
-TARGET_KERNEL_CONFIG := rolex_defconfig
+TARGET_KERNEL_CONFIG := ut4a_defconfig
 TARGET_KERNEL_SOURCE := kernel/xiaomi/msm8917
 BOARD_CUSTOM_BOOTIMG_MK := $(LOCAL_PATH)/mkbootimg.mk
 TARGET_PREBUILT_KERNEL := $(LOCAL_PATH)/kernel
@@ -113,6 +113,7 @@ TARGET_TS_MAKEUP := true
 # Charger
 BOARD_CHARGER_ENABLE_SUSPEND := true
 BOARD_CHARGER_DISABLE_INIT_BLANK := true
+BOARD_HEALTHD_CUSTOM_CHARGER_RES := $(LOCAL_PATH)/charger/images
 BOARD_GLOBAL_CFLAGS += -DBATTERY_REAL_INFO
 
 # CMHW
@@ -219,16 +220,20 @@ BOARD_SEPOLICY_DIRS += $(LOCAL_PATH)/sepolicy
 # Wi-Fi
 BOARD_HAS_QCOM_WLAN := true
 BOARD_HAS_QCOM_WLAN_SDK := true
-BOARD_HOSTAPD_DRIVER := NL80211
-BOARD_HOSTAPD_PRIVATE_LIB := lib_driver_cmd_qcwcn
 BOARD_WLAN_DEVICE := qcwcn
+BOARD_HOSTAPD_DRIVER := NL80211
+BOARD_HOSTAPD_PRIVATE_LIB := lib_driver_cmd_$(BOARD_WLAN_DEVICE)
+HOSTAPD_VERSION := VER_0_8_X
 BOARD_WPA_SUPPLICANT_DRIVER := NL80211
-BOARD_WPA_SUPPLICANT_PRIVATE_LIB := lib_driver_cmd_qcwcn
-WIFI_DRIVER_FW_PATH_AP := "ap"
-WIFI_DRIVER_FW_PATH_STA := "sta"
-WIFI_DRIVER_MODULE_NAME := "wlan"
-WIFI_DRIVER_MODULE_PATH := "/system/lib/modules/wlan.ko"
+BOARD_WPA_SUPPLICANT_PRIVATE_LIB := lib_driver_cmd_$(BOARD_WLAN_DEVICE)
+## Those break Wi-Fi when enabling the hotspot on UBPorts
+#WIFI_DRIVER_FW_PATH_AP := "ap"
+#WIFI_DRIVER_FW_PATH_STA := "sta"
+#WIFI_DRIVER_FW_PATH_P2P := "p2p"
 WPA_SUPPLICANT_VERSION := VER_0_8_X
+
+#allow arm64 libhybris
+HYBRIS_MEDIA_32_BIT_ONLY := false
 
 # Inherit from the proprietary version
 -include vendor/xiaomi/rolex/BoardConfigVendor.mk

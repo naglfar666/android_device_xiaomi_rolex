@@ -75,6 +75,7 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     audiod \
     audio.a2dp.default \
+    audio_policy.msm8937 \
     audio.primary.msm8937 \
     audio.r_submix.default \
     audio.usb.default \
@@ -183,6 +184,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/keylayout/ft5x06_ts.kl:system/usr/keylayout/ft5x06_ts.kl \
     $(LOCAL_PATH)/keylayout/gpio-keys.kl:system/usr/keylayout/gpio-keys.kl \
     $(LOCAL_PATH)/keylayout/qpnp_pon.kl:system/usr/keylayout/qpnp_pon.kl \
+    $(LOCAL_PATH)/keylayout/msm8920-sku7-snd-card_Button_Jack.kl:system/usr/keylayout/msm8920-sku7-snd-card_Button_Jack.kl \
     $(LOCAL_PATH)/keylayout/synaptics_dsx.kl:system/usr/keylayout/synaptics_dsx.kl \
     $(LOCAL_PATH)/keylayout/synaptics_rmi4_i2c.kl:system/usr/keylayout/synaptics_rmi4_i2c.kl \
 
@@ -206,8 +208,10 @@ PRODUCT_PACKAGES += \
 # Media 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/media_codecs.xml:system/etc/media_codecs.xml \
+    $(LOCAL_PATH)/configs/media_codecs_8956.xml:system/etc/media_codecs_8956.xml \
     $(LOCAL_PATH)/configs/media_codecs_performance.xml:system/etc/media_codecs_performance.xml \
-    $(LOCAL_PATH)/configs/media_profiles.xml:system/etc/media_profiles.xml 
+    $(LOCAL_PATH)/configs/media_profiles.xml:system/etc/media_profiles.xml \
+    $(LOCAL_PATH)/configs/media_profiles_8956.xml:system/etc/media_profiles_8956.xml
 
 PRODUCT_COPY_FILES += \
     frameworks/av/media/libstagefright/data/media_codecs_google_audio.xml:system/etc/media_codecs_google_audio.xml \
@@ -246,7 +250,6 @@ PRODUCT_PACKAGES += \
     init.qcom.rc \
     init.qcom.sh \
     init.qcom.syspart_fixup.sh \
-    init.qcom.usb.sh \
     init.qcom.sensors.sh \
     init.qcom.usb.rc \
     init.target.rc \
@@ -266,6 +269,8 @@ init.qcom.factory.rc \
 init.qcom.sdio.sh \
 init.qti.ims.sh \
 init.baseband.sh \
+init_hcismd_up.sh \
+#init.qcom.usb.sh \
 
 # RIL
 PRODUCT_PACKAGES += \
@@ -315,4 +320,74 @@ ADDITIONAL_DEFAULT_PROPERTIES += \
 	ro.debuggable=1 \
 	ro.adb.secure=0 \
         ro.oem_unlock_supported=1
+################
+#UTouch SUPPORT#
+################
 
+# Wakelock
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.qc.sensors.wl_dis=true
+
+# telepathy-ofono quirks
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.t-o.quirk.forcesink=sink.primary_output \
+    ro.t-o.quirk.forcesource=source.surround_sound_primary_input
+
+# droidmedia doesn't support HAL3 yet
+PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
+    persist.camera.HAL3.enabled=0
+
+# Aethercast
+PRODUCT_PROPERTY_OVERRIDES += \
+    ubuntu.widi.supported=1 \
+
+PRODUCT_PACKAGES += \
+    libubuntu_application_api \
+    libcameraservice \
+    libdroidmedia \
+    libcamera_compat_layer \
+    libmedia_compat_layer \
+    libui_compat_layer \
+    libsf_compat_layer \
+    minimediaservice \
+    minisfservice \
+    libminisf \
+    libaudioflingerglue \
+    direct_ubuntu_application_sensors_c_api_for_hybris_test \
+    direct_ubuntu_application_sensors_for_hybris_test \
+    direct_ubuntu_application_gps_c_api_for_hybris_test \
+    camera_service \
+    miniafservice
+
+## Power off charging mode
+PRODUCT_PACKAGES += \
+    charger_res_images
+
+# UBPorts
+PRODUCT_PACKAGES += \
+ubuntu/environment
+
+## Disable FakeSensorServer so UBports can use it
+MINIMEDIA_SENSORSERVER_DISABLE := 1
+
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/ubuntu/70-android.rules:system/halium/lib/udev/rules.d/70-android.rules \
+    $(LOCAL_PATH)/ubuntu/timekeeper.conf:system/halium/etc/init/timekeeper.conf \
+    $(LOCAL_PATH)/ubuntu/ofono.override:system/halium/etc/init/ofono.override \
+    $(LOCAL_PATH)/ubuntu/servicemanager.rc:system/etc/init/servicemanager.rc \
+    $(LOCAL_PATH)/ubuntu/init_hcismd_up.sh:system/etc/init_hcismd_up.sh \
+    $(LOCAL_PATH)/ubuntu/apparmor.d/abstractions/base:system/halium/etc/apparmor.d/abstractions/base \
+    $(LOCAL_PATH)/ubuntu/apparmor.d/local/usr.bin.media-hub-server:system/halium/etc/apparmor.d/local/usr.bin.media-hub-server \
+    $(LOCAL_PATH)/ubuntu/apparmor.d/hardware/graphics.d/apparmor-easyprof-ubuntu_android:system/halium/usr/share/apparmor/hardware/graphics.d/apparmor-easyprof-ubuntu_android \
+    $(LOCAL_PATH)/ubuntu/apparmor.d/hardware/video.d/apparmor-easyprof-ubuntu_android:system/halium/usr/share/apparmor/hardware/video.d/apparmor-easyprof-ubuntu_android \
+    $(LOCAL_PATH)/ubuntu/powerd-config.xml:system/halium/usr/share/powerd/device_configs/config-default.xml \
+    $(LOCAL_PATH)/ubuntu/display.conf:system/halium/etc/ubuntu-touch-session.d/android.conf \
+    $(LOCAL_PATH)/ubuntu/environment:system/halium/etc/environment \
+    $(LOCAL_PATH)/ubuntu/anbox-tool:system/halium/usr/bin/anbox-tool \
+    $(LOCAL_PATH)/ubuntu/device-hacks.conf:system/halium/etc/init/device-hacks.conf
+
+# Ubuntu Touch Fix MTP connection
+PRODUCT_COPY_FILES += \
+$(LOCAL_PATH)/ubuntu/setupusb:system/halium/usr/share/usbinit/setupusb \
+$(LOCAL_PATH)/ubuntu/mtp-server.conf:system/halium/usr/share/upstart/sessions/mtp-server.conf \
+$(LOCAL_PATH)/ubuntu/mtp-stat.conf:system/halium/etc/init/mtp-state.conf

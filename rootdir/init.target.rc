@@ -118,6 +118,7 @@ service qseecomd /system/bin/qseecomd
    user root
    group root
    writepid /dev/cpuset/system-background/tasks
+   disabled
 
 #service aostlmd /system/bin/aostlmd
 #   class late_start
@@ -154,6 +155,8 @@ on boot
     start rmt_storage
     # enable sched boost in order to schedule tasks on perf cluster
     write /proc/sys/kernel/sched_boost 1
+    # mtp on boot
+    setprop persist.sys.usb.config mtp
 
 # access permission for secure touch
     chmod 0660 /sys/devices/soc.0/78b7000.i2c/i2c-3/3-0020/input/input0/secure_touch_enable
