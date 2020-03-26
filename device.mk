@@ -389,4 +389,5 @@ PRODUCT_COPY_FILES += \
 # Ubuntu Touch Fix MTP connection
 PRODUCT_COPY_FILES += \
 $(LOCAL_PATH)/ubuntu/setupusb:system/halium/usr/share/usbinit/setupusb \
+$(LOCAL_PATH)/ubuntu/mtp-enable:system/halium/usr/bin/mtp-enable \
 $(LOCAL_PATH)/ubuntu/mtp-stat.conf:system/halium/etc/init/mtp-state.conf
