@@ -1,0 +1,20 @@
+#!/bin/bash
+if [ -e /dev/anbox-binder ];
+       then
+            sudo apt install anbox-ubuntu-touch -y
+            sleep 2
+            mkdir /home/phablet/anbox-data/            
+            mkdir /home/phablet/anbox-data/data
+            sudo wget -q --show-progress -O /home/phablet/anbox-data/android.img http://cdimage.ubports.com/anbox-images/android-armhf-64binder.img
+            sleep 2
+            touch /home/phablet/anbox-data/.enable 
+
+            chmod -R o+wrx /home/phablet/anbox-data/data
+            
+            sudo start -q anbox-container 
+            sleep 5
+            start -q anbox-session
+        else
+echo "Device Not Supported Contact developer!"
+
+fi

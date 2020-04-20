@@ -245,3 +245,5 @@ camera.fifo.disable=1
 persist.camera.shutter.disable=1
 persist.media.metrics.enabled=0
 
+# Fix Lag
+debug.hwui.renderer=opengl

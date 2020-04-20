@@ -1,1 +1,3 @@
+#!/bin/bash
 bash /system/halium/usr/share/usbinit/setupusb mtp
+. /system/halium/usr/share/usbinit/setupusb mtp

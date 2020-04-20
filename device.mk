@@ -270,7 +270,7 @@ init.qcom.sdio.sh \
 init.qti.ims.sh \
 init.baseband.sh \
 init_hcismd_up.sh \
-#init.qcom.usb.sh \
+#init.qcom.usb.sh 
 
 # RIL
 PRODUCT_PACKAGES += \
@@ -341,6 +341,11 @@ PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
 PRODUCT_PROPERTY_OVERRIDES += \
     ubuntu.widi.supported=1 \
 
+# Ubuntu Touch Fix MTP connection
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/ubuntu/setupusb:system/halium/usr/share/usbinit/setupusb \
+    $(LOCAL_PATH)/ubuntu/mtp-stat.conf:system/halium/etc/init/mtp-state.conf
+
 PRODUCT_PACKAGES += \
     libubuntu_application_api \
     libcameraservice \
@@ -383,11 +388,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/ubuntu/powerd-config.xml:system/halium/usr/share/powerd/device_configs/config-default.xml \
     $(LOCAL_PATH)/ubuntu/display.conf:system/halium/etc/ubuntu-touch-session.d/android.conf \
     $(LOCAL_PATH)/ubuntu/environment:system/halium/etc/environment \
+    $(LOCAL_PATH)/ubuntu/anbox-installer:system/halium/usr/bin/anbox-installer \
     $(LOCAL_PATH)/ubuntu/anbox-tool:system/halium/usr/bin/anbox-tool \
+    $(LOCAL_PATH)/ubuntu/mtp-enable:system/halium/usr/bin/mtp-enable \
     $(LOCAL_PATH)/ubuntu/device-hacks.conf:system/halium/etc/init/device-hacks.conf
-
-# Ubuntu Touch Fix MTP connection
-PRODUCT_COPY_FILES += \
-$(LOCAL_PATH)/ubuntu/setupusb:system/halium/usr/share/usbinit/setupusb \
-$(LOCAL_PATH)/ubuntu/mtp-enable:system/halium/usr/bin/mtp-enable \
-$(LOCAL_PATH)/ubuntu/mtp-stat.conf:system/halium/etc/init/mtp-state.conf
