@@ -391,4 +391,5 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/ubuntu/anbox-installer:system/halium/usr/bin/anbox-installer \
     $(LOCAL_PATH)/ubuntu/anbox-tool:system/halium/usr/bin/anbox-tool \
     $(LOCAL_PATH)/ubuntu/mtp-enable:system/halium/usr/bin/mtp-enable \
-    $(LOCAL_PATH)/ubuntu/device-hacks.conf:system/halium/etc/init/device-hacks.conf
+    $(LOCAL_PATH)/ubuntu/device-hacks.conf:system/halium/etc/init/device-hacks.conf \
+    $(LOCAL_PATH)/ubuntu/usensord.conf:system/halium/usr/share/upstart/sessions/usensord.conf
